@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from "react-bootstrap";
 import { FaGithubAlt, FaGoogle, FaTwitter, FaUserCircle, FaLock } from "react-icons/fa";
 import logo from "../image/logo1.png";
-import "./Login.css";
 
 export default function Login({ onLogin }) {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -48,106 +46,110 @@ export default function Login({ onLogin }) {
     };
 
     return (
-        <Container className="login-container">
-            <Row className="w-100">
-                <Col md={6} className="welcome-section">
-                    <Card className="welcome-card">
-                        <Card.Body>
-                            <h2 className="welcome-title">¡Bienvenido a Turismo!</h2>
-                            <p className="welcome-text">Explora destinos únicos y vive experiencias inolvidables.</p>
-                            <img src={logo} alt="Logo Turismo" className="welcome-logo" />
-                            <p className="welcome-subtext">Inicia sesión para acceder a contenido exclusivo.</p>
-                        </Card.Body>
-                    </Card>
-                </Col>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50 p-4 mt-[150px]">
+            <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row transform transition-all hover:shadow-3xl">
+                {/* Sección de bienvenida */}
+                <div className="w-full lg:w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white flex flex-col justify-center items-center text-center">
+                    <h2 className="text-4xl font-bold mb-4 animate-fade-in">¡Bienvenido a Turismo!</h2>
+                    <p className="text-lg mb-6 animate-fade-in delay-100">Explora destinos únicos y vive experiencias inolvidables.</p>
+                    <img src={logo} alt="Logo Turismo" className="w-32 h-32 mb-6 animate-fade-in delay-200" />
+                    <p className="text-sm animate-fade-in delay-300">Inicia sesión para acceder a contenido exclusivo.</p>
+                </div>
 
-                <Col md={6} className="login-section">
-                    <Card className="login-card">
-                        <Card.Body>
-                            <h3 className="login-title">Inicia Sesión</h3>
-                            <p className="login-text">Accede a contenido exclusivo</p>
+                {/* Sección de inicio de sesión */}
+                <div className="w-full lg:w-1/2 p-8">
+                    <h3 className="text-3xl font-bold text-gray-800 mb-2 animate-fade-in">Inicia Sesión</h3>
+                    <p className="text-gray-600 mb-6 animate-fade-in delay-100">Accede a contenido exclusivo</p>
 
-                            <SocialLoginButtons />
+                    {/* Botones de redes sociales */}
+                    <div className="flex gap-4 mb-6 animate-fade-in delay-200">
+                        <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-50 transition-all hover:scale-105">
+                            <FaGoogle className="text-red-600" size={20} /> Google
+                        </button>
+                        <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-50 transition-all hover:scale-105">
+                            <FaTwitter className="text-blue-500" size={20} /> Twitter
+                        </button>
+                        <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-50 transition-all hover:scale-105">
+                            <FaGithubAlt className="text-gray-800" size={20} /> GitHub
+                        </button>
+                    </div>
 
-                            {error && <Alert variant="danger" className="error-message">{error}</Alert>}
+                    {/* Mensaje de error */}
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 animate-fade-in">
+                            {error}
+                        </div>
+                    )}
 
-                            <Form className="login-form" onSubmit={handleSubmit}>
-                                <Form.Group className="form-group">
-                                    <Form.Label htmlFor="email" className="form-label">
-                                        <FaUserCircle className="icon" /> Email
-                                    </Form.Label>
-                                    <Form.Control 
-                                        type="email" 
-                                        id="email"
-                                        name="email"
-                                        placeholder="Ingresa tu email" 
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                        isInvalid={!isValidEmail}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Ingresa un correo válido.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
+                    {/* Formulario de inicio de sesión */}
+                    <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in delay-300">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                                <FaUserCircle className="inline-block mr-2" /> Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Ingresa tu email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                                    isValidEmail ? "focus:ring-blue-500" : "focus:ring-red-500 border-red-500"
+                                } transition-all`}
+                                required
+                            />
+                            {!isValidEmail && (
+                                <p className="text-sm text-red-500 mt-1">Ingresa un correo válido.</p>
+                            )}
+                        </div>
 
-                                <Form.Group className="form-group">
-                                    <Form.Label htmlFor="password" className="form-label">
-                                        <FaLock className="icon" /> Contraseña
-                                    </Form.Label>
-                                    <Form.Control 
-                                        type="password" 
-                                        id="password"
-                                        name="password"
-                                        placeholder="Ingresa tu contraseña" 
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        required
-                                        isInvalid={!isValidPassword}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        La contraseña debe tener al menos 6 caracteres.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                                <FaLock className="inline-block mr-2" /> Contraseña
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Ingresa tu contraseña"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                                    isValidPassword ? "focus:ring-blue-500" : "focus:ring-red-500 border-red-500"
+                                } transition-all`}
+                                required
+                            />
+                            {!isValidPassword && (
+                                <p className="text-sm text-red-500 mt-1">La contraseña debe tener al menos 6 caracteres.</p>
+                            )}
+                        </div>
 
-                                <Button 
-                                    variant="success" 
-                                    type="submit" 
-                                    className="submit-button"
-                                    disabled={isSubmitting || !isValidEmail || !isValidPassword}
-                                >
-                                    {isSubmitting ? (
-                                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                                    ) : (
-                                        "Iniciar Sesión"
-                                    )}
-                                </Button>
-                            </Form>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || !isValidEmail || !isValidPassword}
+                            className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSubmitting ? (
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Procesando...
+                                </div>
+                            ) : (
+                                "Iniciar Sesión"
+                            )}
+                        </button>
+                    </form>
 
-                            <p className="signup-text">
-                                ¿No tienes cuenta? 
-                                <NavLink to="/signup" className="signup-link">Regístrate</NavLink>
-                            </p>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    );
-}
-
-function SocialLoginButtons() {
-    return (
-        <div className="social-login">
-            <Button variant="outline-danger" className="social-button">
-                <FaGoogle size={20} /> Google
-            </Button>
-            <Button variant="outline-primary" className="social-button">
-                <FaTwitter size={20} /> Twitter
-            </Button>
-            <Button variant="outline-dark" className="social-button">
-                <FaGithubAlt size={20} /> GitHub
-            </Button>
+                    {/* Enlace de registro */}
+                    <p className="text-center text-gray-600 mt-6 animate-fade-in delay-400">
+                        ¿No tienes cuenta?{" "}
+                        <NavLink to="/signup" className="text-blue-600 hover:underline">
+                            Regístrate
+                        </NavLink>
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }

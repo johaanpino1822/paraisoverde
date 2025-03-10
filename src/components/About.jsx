@@ -1,84 +1,104 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-
 const AboutSection = () => {
   return (
-    <div className="container-fluid py-5 bg-light position-relative">
+    <div className="w-full py-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Contenedor principal */}
       <motion.div
-        className="container pt-5"
+        className="container mx-auto px-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="row align-items-center">
-          <div className="col-lg-6" style={{ minHeight: "500px" }}>
+        <div className="flex flex-col lg:flex-row items-center gap-8">
+          {/* Imagen */}
+          <motion.div
+            className="w-full lg:w-1/2 h-[500px] relative overflow-hidden rounded-3xl shadow-2xl"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <img
+              className="w-full h-full object-cover rounded-3xl"
+              src="src/image/carrousel2.jpg"
+              alt="About Us"
+            />
+            <div className="absolute inset-0 bg-black/20 rounded-3xl" />
+          </motion.div>
+
+          {/* Texto y contenido */}
+          <div className="w-full lg:w-1/2 space-y-6">
             <motion.div
-              className="position-relative h-100 overflow-hidden rounded-3 shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img
-                className="position-absolute w-100 h-100"
-                src="src\image\carrousel1.jpg"
-                alt="About Us"
-                style={{ objectFit: "cover", borderRadius: "15px" }}
-              />
-            </motion.div>
-          </div>
-          <div className="col-lg-6 pt-5 pb-lg-5">
-            <motion.div 
-              className="about-text bg-white p-4 p-lg-5 my-lg-5 shadow-lg rounded-3 position-relative"
+              className="bg-white p-8 rounded-3xl shadow-2xl"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <motion.h6 
-                className="text-primary text-uppercase" 
-                style={{ letterSpacing: "5px" }}
+              {/* Subtítulo */}
+              <motion.h6
+                className="text-lg font-semibold text-blue-600 uppercase tracking-widest"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
                 About Us
               </motion.h6>
-              <motion.h1 
-                className="mb-3 fw-bold text-dark"
+
+              {/* Título */}
+              <motion.h1
+                className="text-4xl font-bold text-gray-900 mt-4"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                We Provide Best Tour Packages In Your Budget
+                We Provide the Best Tour Packages in Your Budget
               </motion.h1>
-              <motion.p 
-                className="text-muted"
+
+              {/* Descripción */}
+              <motion.p
+                className="text-gray-600 mt-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
                 Experience unforgettable adventures with our carefully curated tour packages.
-                Explore breathtaking destinations, enjoy premium services, and create memories 
+                Explore breathtaking destinations, enjoy premium services, and create memories
                 that last a lifetime.
               </motion.p>
-              <div className="row mb-4">
-                <div className="col-6">
-                  <motion.img 
-                    className="img-fluid rounded-3 shadow-lg"
+
+              {/* Galería de imágenes */}
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <motion.div
+                  className="relative h-40 rounded-2xl overflow-hidden shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img
+                    className="w-full h-full object-cover"
                     src="/image/carrousel1.jpg"
-                    alt="Tour Package 1" 
-                    whileHover={{ scale: 1.1 }}
+                    alt="Tour Package 1"
                   />
-                </div>
-                <div className="col-6">
-                  <motion.img 
-                    className="img-fluid rounded-3 shadow-lg"
-                    src="/image/carrousel1.jpg" 
-                    alt="Tour Package 2" 
-                    whileHover={{ scale: 1.1 }}
+                  <div className="absolute inset-0 bg-black/20" />
+                </motion.div>
+                <motion.div
+                  className="relative h-40 rounded-2xl overflow-hidden shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img
+                    className="w-full h-full object-cover"
+                    src="/image/carrousel1.jpg"
+                    alt="Tour Package 2"
                   />
-                </div>
+                  <div className="absolute inset-0 bg-black/20" />
+                </motion.div>
               </div>
-              <motion.div whileHover={{ scale: 1.1 }}>
-                <button className="btn btn-primary btn-lg mt-1 shadow">
+
+              {/* Botón */}
+              <motion.div
+                className="mt-6"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:bg-blue-700 transition-all">
                   Book Now
                 </button>
               </motion.div>
