@@ -1,0 +1,98 @@
+/* Estilo General del Footer */
+.footer {
+    background: linear-gradient(135deg, #075a19, #029622);
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.footer h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #FFD700;
+}
+
+/* Lista de enlaces */
+.footer-list {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-list li {
+    margin-bottom: 8px;
+}
+
+.footer-list a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-list a:hover {
+    color: #FFD700;
+}
+
+/* Formulario de Suscripción */
+.subscribe-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.subscribe-form input {
+    width: 70%;
+    padding: 8px;
+    border-radius: 5px 0 0 5px;
+    border: none;
+    outline: none;
+}
+
+.subscribe-form button {
+    padding: 8px 15px;
+    background-color: #FFD700;
+    border: none;
+    color: #1e3c72;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.subscribe-form button:hover {
+    background-color: #ffcc00;
+}
+
+/* Redes Sociales */
+.social-icons {
+    margin-top: 15px;
+}
+
+.social-btn {
+    display: inline-block;
+    font-size: 20px;
+    margin: 0 10px;
+    color: white;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.2);
+    color: #FFD700;
+}
+
+/* Línea Divisoria */
+hr {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 20px auto;
+    width: 80%;
+}
+
+/* Derechos reservados */
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.8;
+}

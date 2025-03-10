@@ -1,0 +1,182 @@
+/* Estilos globales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Navbar con onda */
+.navigation-bar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 15px 0;
+  background: linear-gradient(90deg, #00791a, #064273);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
+
+}
+
+/* Efecto de onda en la parte inferior de la navbar */
+.wave-separator {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: url("./image/wave.svg") repeat-x;
+  animation: wave-animation 10s linear infinite;
+}
+
+/* Animación de onda */
+@keyframes wave-animation {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 100px;
+  }
+}
+
+/* Navbar cuando se hace scroll */
+.navigation-bar.scrolled {
+  background: rgba(0, 97, 16, 0.9);
+  padding: 10px 0;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+
+/* Logo */
+.logo {
+  width: 80px;
+  height: 80px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+  transform: rotate(10deg) scale(1.05);
+}
+
+/* Estilo de enlaces */
+.nav-link {
+  font-size: 18px;
+  font-weight: 500;
+  color: white !important;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  position: relative;
+  padding: 10px 15px;
+}
+
+.nav-link:hover {
+  color: #f8b400 !important;
+  transform: scale(1.1);
+}
+
+/* Estilo de enlace activo */
+.active-link {
+  color: #f8b400 !important;
+}
+
+.active-link::after {
+  width: 100%;
+}
+
+/* Efecto hover general */
+.hover-effect {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+  transform: scale(1.2);
+}
+
+/* Iconos de redes sociales */
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icon {
+  color: white;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.social-icon:hover {
+  color: #f8b400;
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* 🔹 Separador animado dentro de la Navbar */
+.navbar-separator {
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  bottom: -15px; /* Ajusta la posición */
+  left: 0;
+}
+
+.navbar-separator svg {
+  width: 100%;
+  height: 50px;
+}
+
+/* Nueva animación para el efecto de olas */
+.wave-path {
+  animation: waveMotion 5s infinite ease-in-out;
+}
+
+@keyframes waveMotion {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Scrollbar personalizado */
+body {
+  --sb-track-color: #232E33;
+  --sb-thumb-color: #092541;
+  --sb-size: 14px;
+}
+
+body::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .navigation-bar {
+    text-align: center;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 10px;
+  }
+
+  .social-icons {
+    margin-top: 10px;
+  }
+
+  .navbar-separator svg {
+    height: 40px;
+  }
+}

@@ -1,0 +1,149 @@
+.signup-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    padding: 20px;
+    margin-top: 150px;
+}
+
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+.welcome-logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+.welcome-subtext {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+.signup-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.signup-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.signup-text {
+    font-size: 1rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    color: #34495e;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 10px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #4caf50, #8bc34a);
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.login-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #7f8c8d;
+}
+
+.login-link {
+    color: #4caf50;
+    text-decoration: none;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    margin-bottom: 20px;
+    text-align: center;
+    border-radius: 10px;
+}

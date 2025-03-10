@@ -1,0 +1,102 @@
+/* WhatsApp Chat Button Styles */
+.whatsapp-chat-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+.whatsapp-chat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: #25d366; /* Color oficial de WhatsApp */
+  border-radius: 50%;
+  box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease-in-out;
+  text-decoration: none; /* Elimina el subrayado del enlace */
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animación de flotación */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Efecto al pasar el mouse */
+.whatsapp-chat:hover {
+  background-color: #045819; /* Color más oscuro al hacer hover */
+  box-shadow: 0 8px 16px rgba(37, 211, 102, 0.6);
+  animation: none; /* Detiene la animación al hacer hover */
+}
+
+/* Ícono de WhatsApp */
+.whatsapp-icon {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.whatsapp-chat:hover .whatsapp-icon {
+  transform: rotate(15deg) scale(1.1); /* Gira y escala el ícono */
+}
+
+/* Tooltip para mejorar la experiencia de usuario */
+.whatsapp-tooltip {
+  position: absolute;
+  bottom: 90px;
+  right: 0;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-chat:hover .whatsapp-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Efecto de pulsación al hacer clic */
+.whatsapp-chat:active {
+  transform: scale(0.9);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .whatsapp-chat-container {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .whatsapp-chat {
+    width: 60px;
+    height: 60px;
+  }
+
+  .whatsapp-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .whatsapp-tooltip {
+    font-size: 12px;
+    padding: 8px 12px;
+    bottom: 80px; /* Ajuste para dispositivos móviles */
+  }
+}

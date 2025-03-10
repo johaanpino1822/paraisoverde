@@ -1,0 +1,52 @@
+/* Contenedor Principal */
+.hoteles-container {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Filtro de Hoteles */
+.filtro-select {
+    width: 250px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Tarjeta de Hotel */
+.hotel-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.hotel-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen del Hotel */
+.hotel-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Título del Hotel */
+.hotel-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* Estrellas */
+.hotel-stars {
+    margin-bottom: 10px;
+}
+
+/* Botón */
+.hotel-btn {
+    background-color: #007bff;
+    border: none;
+    width: 100%;
+}
+
+.hotel-btn:hover {
+    background-color: #0056b3;
+}

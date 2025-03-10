@@ -1,0 +1,32 @@
+.navigation-bar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding-bottom: 10px;
+  animation: wave-motion 6s infinite ease-in-out;
+}
+
+@keyframes wave-motion {
+  0% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(4px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+  75% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.9);
+  animation: none;
+}
