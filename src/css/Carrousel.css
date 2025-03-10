@@ -27,19 +27,22 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 20px;
   text-align: center;
+  padding: 20px;
+  color: white;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)); /* Gradiente suave */
 }
 
 .carousel-overlay h2 {
   font-size: 24px;
   margin-bottom: 10px;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejorar la legibilidad */
 }
 
 .carousel-overlay p {
   font-size: 16px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejorar la legibilidad */
 }
 
 /* Media Queries para dispositivos móviles */

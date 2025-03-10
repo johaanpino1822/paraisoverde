@@ -4,9 +4,9 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import logo from "../image/logo1.png";
 
-
 function NavigationBar() {
   const [navbarScrolled, setNavbarScrolled] = useState(false);
+  const [expanded, setExpanded] = useState(false); // Estado para controlar la expansión del Navbar
   const location = useLocation();
 
   useEffect(() => {
@@ -16,6 +16,11 @@ function NavigationBar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Cierra el Navbar.Collapse cuando se cambia de ruta
+  useEffect(() => {
+    setExpanded(false); // Cierra el menú al cambiar de ruta
+  }, [location.pathname]);
 
   const menuItems = [
     { path: "/", label: "Inicio" },
@@ -31,6 +36,8 @@ function NavigationBar() {
       className={`navigation-bar ${navbarScrolled ? "scrolled" : ""}`}
       variant="dark"
       fixed="top"
+      expanded={expanded} // Controla si el Navbar está expandido o no
+      onToggle={() => setExpanded(!expanded)} // Alterna el estado de expansión
     >
       <Container>
         <Navbar.Brand as={Link} to="/">
@@ -45,6 +52,7 @@ function NavigationBar() {
                 as={Link}
                 to={path}
                 className={`nav-link ${location.pathname === path ? "active-link" : ""}`}
+                onClick={() => setExpanded(false)} // Cierra el menú al hacer clic en un enlace
               >
                 {label}
               </Nav.Link>

@@ -2,6 +2,9 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
 /* Navbar con onda */
@@ -15,7 +18,6 @@ body {
   background: linear-gradient(90deg, #00791a, #064273);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
-
 }
 
 /* Efecto de onda en la parte inferior de la navbar */
@@ -47,8 +49,6 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
-
-
 /* Logo */
 .logo {
   width: 80px;
@@ -68,6 +68,7 @@ body {
   transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
   position: relative;
   padding: 10px 15px;
+  text-decoration: none; /* Elimina el subrayado predeterminado */
 }
 
 .nav-link:hover {
@@ -81,7 +82,15 @@ body {
 }
 
 .active-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
+  height: 2px;
+  background-color: #f8b400;
+  transform: scaleX(1);
+  transition: transform 0.3s ease-in-out;
 }
 
 /* Efecto hover general */
@@ -97,47 +106,18 @@ body {
 .social-icons {
   display: flex;
   gap: 15px;
+  align-items: center; /* Centra verticalmente los íconos */
 }
 
 .social-icon {
   color: white;
   transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  text-decoration: none; /* Elimina el subrayado predeterminado */
 }
 
 .social-icon:hover {
   color: #f8b400;
   transform: scale(1.2) rotate(5deg);
-}
-
-/* 🔹 Separador animado dentro de la Navbar */
-.navbar-separator {
-  width: 100%;
-  overflow: hidden;
-  position: absolute;
-  bottom: -15px; /* Ajusta la posición */
-  left: 0;
-}
-
-.navbar-separator svg {
-  width: 100%;
-  height: 50px;
-}
-
-/* Nueva animación para el efecto de olas */
-.wave-path {
-  animation: waveMotion 5s infinite ease-in-out;
-}
-
-@keyframes waveMotion {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-20px);
-  }
-  100% {
-    transform: translateX(0);
-  }
 }
 
 /* Scrollbar personalizado */
@@ -173,10 +153,26 @@ body::-webkit-scrollbar-thumb {
   }
 
   .social-icons {
+    justify-content: center; /* Centra los íconos en móviles */
     margin-top: 10px;
   }
 
-  .navbar-separator svg {
-    height: 40px;
+  .wave-separator {
+    height: 30px; /* Ajusta la altura para móviles */
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px; /* Reduce el tamaño del logo en móviles */
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-link {
+    font-size: 16px; /* Reduce el tamaño de la fuente en móviles pequeños */
+  }
+
+  .social-icon {
+    font-size: 20px; /* Ajusta el tamaño de los íconos en móviles pequeños */
   }
 }
