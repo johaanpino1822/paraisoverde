@@ -1,102 +1,98 @@
-/* WhatsApp Chat Button Styles */
-.whatsapp-chat-container {
+.whatsapp-container {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
 }
 
-.whatsapp-chat {
+/* Botón flotante de WhatsApp */
+.whatsapp-button {
+  width: 60px;
+  height: 60px;
+  background-color: #25D366;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
-  background-color: #25d366; /* Color oficial de WhatsApp */
-  border-radius: 50%;
-  box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
-  transition: all 0.3s ease-in-out;
-  text-decoration: none; /* Elimina el subrayado del enlace */
-  position: relative;
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Animación de flotación */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-/* Efecto al pasar el mouse */
-.whatsapp-chat:hover {
-  background-color: #045819; /* Color más oscuro al hacer hover */
-  box-shadow: 0 8px 16px rgba(37, 211, 102, 0.6);
-  animation: none; /* Detiene la animación al hacer hover */
-}
-
-/* Ícono de WhatsApp */
-.whatsapp-icon {
-  width: 40px;
-  height: 40px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.whatsapp-chat:hover .whatsapp-icon {
-  transform: rotate(15deg) scale(1.1); /* Gira y escala el ícono */
-}
-
-/* Tooltip para mejorar la experiencia de usuario */
-.whatsapp-tooltip {
-  position: absolute;
-  bottom: 90px;
-  right: 0;
-  background-color: #333;
-  color: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
 
-.whatsapp-chat:hover .whatsapp-tooltip {
+.whatsapp-button img {
+  width: 35px;
+  height: 35px;
+}
+
+.whatsapp-button:hover {
+  transform: scale(1.1);
+}
+
+/* Menú de asesores */
+.whatsapp-menu {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 250px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tarjeta de cada asesor */
+.whatsapp-card {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.whatsapp-card:last-child {
+  border-bottom: none;
+}
+
+.whatsapp-card:hover {
+  background: #f0f0f0;
+}
+
+/* Icono de WhatsApp */
+.whatsapp-icon {
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+}
+
+/* Información del asesor */
+.whatsapp-info {
+  flex-grow: 1;
+}
+
+.whatsapp-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.whatsapp-role {
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+/* Icono de "Ir al chat" */
+.whatsapp-go-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.whatsapp-card:hover .whatsapp-go-icon {
   opacity: 1;
-  visibility: visible;
-}
-
-/* Efecto de pulsación al hacer clic */
-.whatsapp-chat:active {
-  transform: scale(0.9);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .whatsapp-chat-container {
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .whatsapp-chat {
-    width: 60px;
-    height: 60px;
-  }
-
-  .whatsapp-icon {
-    width: 35px;
-    height: 35px;
-  }
-
-  .whatsapp-tooltip {
-    font-size: 12px;
-    padding: 8px 12px;
-    bottom: 80px; /* Ajuste para dispositivos móviles */
-  }
 }
