@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import WppChat from "../components/whatsappchat"
 import Bottom from "../components/Bottom"
 
+
 function Home() {
   return (
     <div>
@@ -13,6 +14,7 @@ function Home() {
     <Card/>
     <Mapa/>
     <Bottom/>
+    
     <Footer/>
     <WppChat/> 
    

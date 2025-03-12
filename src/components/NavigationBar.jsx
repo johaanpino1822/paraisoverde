@@ -68,6 +68,7 @@ function NavigationBar() {
             <a href="https://twitter.com" target="_blank" rel="noreferrer" className="social-icon">
               <FaTwitter size={24} />
             </a>
+            
           </div>
         </Navbar.Collapse>
       </Container>
