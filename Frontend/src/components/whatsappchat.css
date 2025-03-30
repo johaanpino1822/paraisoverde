@@ -7,6 +7,7 @@
 
 /* Botón flotante de WhatsApp */
 .whatsapp-button {
+  position: relative;
   width: 60px;
   height: 60px;
   background-color: #25D366;
@@ -15,8 +16,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  outline: none;
 }
 
 .whatsapp-button img {
@@ -25,7 +28,32 @@
 }
 
 .whatsapp-button:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Tooltip (mensaje emergente) */
+.whatsapp-button::after {
+  content: "¿Quisiera comunicarse con nosotros?";
+  position: absolute;
+  right: 70px; /* Coloca el mensaje a la izquierda del botón */
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Mostrar el tooltip cuando el cursor está sobre el botón */
+.whatsapp-button:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 /* Menú de asesores */
@@ -33,23 +61,37 @@
   position: absolute;
   bottom: 80px;
   right: 0;
-  width: 250px;
+  width: 270px;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  padding: 12px;
   display: flex;
   flex-direction: column;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }
 
 /* Tarjeta de cada asesor */
 .whatsapp-card {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border-radius: 8px;
 }
 
 .whatsapp-card:last-child {
@@ -57,14 +99,15 @@
 }
 
 .whatsapp-card:hover {
-  background: #f0f0f0;
+  background: #f8f8f8;
+  transform: scale(1.02);
 }
 
 /* Icono de WhatsApp */
 .whatsapp-icon {
-  width: 35px;
-  height: 35px;
-  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
 }
 
 /* Información del asesor */
@@ -87,12 +130,49 @@
 
 /* Icono de "Ir al chat" */
 .whatsapp-go-icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.7;
+  width: 22px;
+  height: 22px;
+  opacity: 0.6;
   transition: opacity 0.3s ease;
 }
 
 .whatsapp-card:hover .whatsapp-go-icon {
   opacity: 1;
+}
+
+/* Diseño responsivo */
+@media (max-width: 480px) {
+  .whatsapp-container {
+      bottom: 15px;
+      right: 15px;
+  }
+
+  .whatsapp-button {
+      width: 55px;
+      height: 55px;
+  }
+
+  .whatsapp-menu {
+      width: 240px;
+  }
+
+  .whatsapp-card {
+      padding: 10px;
+  }
+
+  .whatsapp-icon {
+      width: 35px;
+      height: 35px;
+  }
+
+  .whatsapp-go-icon {
+      width: 18px;
+      height: 18px;
+  }
+
+  /* Ajuste del tooltip en pantallas pequeñas */
+  .whatsapp-button::after {
+      font-size: 12px;
+      right: 50px;
+  }
 }

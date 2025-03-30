@@ -50,11 +50,11 @@ export default function Signup({ onSignup }) {
 
         try {
             // Enviar solicitud al backend para registrar el usuario
-            const response = await fetch("http://localhost:5000/register", {
+            const response = await fetch("http://localhost:5000/api/users/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    username: formData.name,
+                    name: formData.name,
                     email: formData.email,
                     password: formData.password,
                 }),

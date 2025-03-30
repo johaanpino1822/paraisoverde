@@ -26,7 +26,7 @@ function NavigationBar() {
     { path: "/", label: "Inicio" },
     { path: "/historia", label: "Historia" },
     { path: "/sitios", label: "Sitios" },
-    { path: "/hoteles", label: "Hoteles" },
+    { path: "/hoteles", label: "Servicios" },
     { path: "/contacto", label: "Contacto" },
   ];
 

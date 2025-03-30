@@ -1,40 +1,22 @@
-// server.js
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const { registerUser, loginUser } = require('./auth');
+require('dotenv').config();
+
+const connectDB = require('./config/db');
+connectDB(); // Conectar MongoDB
+
+const userRoutes = require('./routes/userRoutes');
+const hotelRoutes = require('./routes/hotelRoutes');
+const siteRoutes = require('./routes/siteRoutes');
 
 const app = express();
-const port = 5000; // Puerto para el servidor
+app.use(cors());
+app.use(express.json());
 
-// Middleware
-app.use(cors()); // Permitir solicitudes desde el frontend
-app.use(express.json()); // Para parsear JSON en las solicitudes
+app.use('/api/users', userRoutes);
+app.use('/api/hotels', hotelRoutes);
+app.use('/api/sites', siteRoutes);
 
-// Ruta para registrar un usuario
-app.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
-
-    try {
-        const result = await registerUser(username, email, password);
-        res.status(201).json({ message: 'Usuario registrado', userId: result.insertedId });
-    } catch (e) {
-        res.status(400).json({ message: e.message });
-    }
-});
-
-// Ruta para iniciar sesión
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await loginUser(email, password);
-        res.status(200).json({ message: 'Inicio de sesión exitoso', user });
-    } catch (e) {
-        res.status(401).json({ message: e.message });
-    }
-});
-
-// Iniciar el servidor
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));

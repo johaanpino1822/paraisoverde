@@ -37,7 +37,7 @@ export default function Login({ onLogin }) {
 
         try {
             // Enviar solicitud al backend para iniciar sesión
-            const response = await fetch("http://localhost:5000/login", {
+            const response = await fetch("http://localhost:5000/api/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -68,7 +68,7 @@ export default function Login({ onLogin }) {
             <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row transform transition-all hover:shadow-3xl">
                 {/* Sección de bienvenida */}
                 <div className="w-full lg:w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white flex flex-col justify-center items-center text-center">
-                    <h2 className="text-4xl font-bold mb-4 animate-fade-in">¡Bienvenido a Turismo!</h2>
+                    <h2 className="text-4xl font-bold mb-4 animate-fade-in">¡Goza de nuestros servicios !</h2>
                     <p className="text-lg mb-6 animate-fade-in delay-100">Explora destinos únicos y vive experiencias inolvidables.</p>
                     <img src={logo} alt="Logo Turismo" className="w-32 h-32 mb-6 animate-fade-in delay-200" />
                     <p className="text-sm animate-fade-in delay-300">Inicia sesión para acceder a contenido exclusivo.</p>
