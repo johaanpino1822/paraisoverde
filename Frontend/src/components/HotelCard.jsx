@@ -61,8 +61,8 @@ const HotelCard = ({ hotel }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   return (
-    <Card className="hotel-card">
-      <div className="hotel-image-container">
+    <Card className="hotel-card mt-10">
+      <div className="hotel-image-container ">
         <Card.Img 
           variant="top" 
           src={hotel.imagen} 

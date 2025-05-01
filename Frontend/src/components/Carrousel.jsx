@@ -8,7 +8,7 @@ import "swiper/css/effect-fade";
 import "../css/Carrousel.css"; // Archivo CSS mejorado
 import Carrousel1 from "../image/carrousel1.jpg";
 import Carrousel2 from "../image/carrousel2.jpg";
-import Carrousel3 from "../image/carrousel3.jpg";
+import Carrousel4 from "../image/carrousel333.jpg";
 
 const Carrousel = () => {
   return (
@@ -45,7 +45,7 @@ const Carrousel = () => {
 
         <SwiperSlide>
           <div className="slide">
-            <img src={Carrousel3} alt="Viaja con Estilo" className="carousel-image" />
+            <img src={Carrousel4} alt="Viaja con Estilo" className="carousel-image" />
             <div className="carousel-overlay">
               <h2>Viaja con Estilo</h2>
               <p>Encuentra los mejores hoteles y servicios exclusivos.</p>

@@ -12,12 +12,14 @@ export default function Signup({ onSignup }) {
         password: "",
         confirmPassword: "",
     });
+
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidPassword, setIsValidPassword] = useState(true);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
 
+    // Maneja los cambios en los inputs
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -28,7 +30,6 @@ export default function Signup({ onSignup }) {
         }
         if (name === "password") {
             setIsValidPassword(value.length >= 6);
-            // Validar si las contraseñas coinciden
             setPasswordsMatch(value === formData.confirmPassword);
         }
         if (name === "confirmPassword") {
@@ -36,12 +37,13 @@ export default function Signup({ onSignup }) {
         }
     };
 
+    // Maneja el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setError("");
 
-        // Validar campos antes de enviar
+        // Validaciones antes de enviar
         if (!isValidEmail || !isValidPassword || !passwordsMatch) {
             setError("Por favor, corrige los errores en el formulario.");
             setIsSubmitting(false);
@@ -63,10 +65,8 @@ export default function Signup({ onSignup }) {
             const data = await response.json();
 
             if (response.ok) {
-                // Si el registro es exitoso, llamamos a onSignup
                 onSignup(data.user);
             } else {
-                // Si hay un error, mostramos el mensaje del backend
                 throw new Error(data.message || "Error al registrar usuario");
             }
         } catch (err) {
@@ -80,6 +80,7 @@ export default function Signup({ onSignup }) {
     return (
         <Container className="signup-container">
             <Row className="w-100">
+                {/* Sección de bienvenida */}
                 <Col md={6} className="welcome-section">
                     <Card className="welcome-card">
                         <Card.Body>
@@ -91,15 +92,19 @@ export default function Signup({ onSignup }) {
                     </Card>
                 </Col>
 
+                {/* Sección de registro */}
                 <Col md={6} className="signup-section">
                     <Card className="signup-card">
                         <Card.Body>
                             <h3 className="signup-title">Regístrate</h3>
                             <p className="signup-text">Crea una cuenta para empezar</p>
 
+                            {/* Mostrar error si hay alguno */}
                             {error && <Alert variant="danger" className="error-message">{error}</Alert>}
 
+                            {/* Formulario de registro */}
                             <Form className="signup-form" onSubmit={handleSubmit}>
+                                {/* Nombre */}
                                 <Form.Group className="form-group">
                                     <Form.Label htmlFor="name" className="form-label">
                                         <FaUser className="icon" /> Nombre
@@ -115,6 +120,7 @@ export default function Signup({ onSignup }) {
                                     />
                                 </Form.Group>
 
+                                {/* Email */}
                                 <Form.Group className="form-group">
                                     <Form.Label htmlFor="email" className="form-label">
                                         <FaEnvelope className="icon" /> Email
@@ -134,6 +140,7 @@ export default function Signup({ onSignup }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
+                                {/* Contraseña */}
                                 <Form.Group className="form-group">
                                     <Form.Label htmlFor="password" className="form-label">
                                         <FaLock className="icon" /> Contraseña
@@ -153,6 +160,7 @@ export default function Signup({ onSignup }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
+                                {/* Confirmar Contraseña */}
                                 <Form.Group className="form-group">
                                     <Form.Label htmlFor="confirmPassword" className="form-label">
                                         <FaLock className="icon" /> Confirmar Contraseña
@@ -172,6 +180,7 @@ export default function Signup({ onSignup }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
+                                {/* Botón de registro */}
                                 <Button
                                     variant="success"
                                     type="submit"
@@ -186,6 +195,7 @@ export default function Signup({ onSignup }) {
                                 </Button>
                             </Form>
 
+                            {/* Enlace para iniciar sesión */}
                             <p className="login-text">
                                 ¿Ya tienes cuenta? 
                                 <NavLink to="/login" className="login-link">Inicia Sesión</NavLink>

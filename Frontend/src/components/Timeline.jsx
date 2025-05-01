@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Fundacion from "../image/fundacion.jpg";
 
 // Iconos SVG personalizados
 const icons = {
@@ -34,20 +35,22 @@ const icons = {
 const Timeline = () => {
   const events = [
     {
-      year: "1600",
+      year: "1916",
       title: "Fundación del pueblo",
-      description: "El pueblo fue fundado en el año 1600 por un grupo de colonos que buscaban nuevas tierras para establecerse.",
+      description: "Fundado en 1916 por Esteban Velásquez como corregimiento llamándose San José de San Andrés.",
       details: "La fundación del pueblo marcó el inicio de una comunidad próspera que ha crecido a lo largo de los siglos.",
       icon: icons.foundation,
-      image: "https://via.placeholder.com/400x200?text=Fundación+1600",
+      image: Fundacion, // Solo pasamos la imagen como URL
     },
+    
+    
     {
       year: "1750",
       title: "Construcción de la iglesia",
       description: "La iglesia principal fue construida en 1750 y se ha mantenido como un símbolo de la fe y la comunidad desde entonces.",
       details: "La iglesia es un ejemplo destacado de la arquitectura colonial y ha sido restaurada varias veces para preservar su belleza.",
       icon: icons.church,
-      image: "https://via.placeholder.com/400x200?text=Iglesia+1750",
+      image: "",
     },
     {
       year: "1900",

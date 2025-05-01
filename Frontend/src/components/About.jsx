@@ -1,5 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
+import About1 from "../image/Hotel.jpg";
+
 
 const AboutSection = () => {
   return (
@@ -18,11 +20,7 @@ const AboutSection = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <img
-              className="w-full h-full object-cover rounded-3xl"
-              src="src/image/carrousel2.jpg"
-              alt="About Us"
-            />
+            <img src={About1} alt="Aventuras Increíbles" className="carousel-image" />
             <div className="absolute inset-0 bg-black/20 rounded-3xl" />
           </motion.div>
 
@@ -72,22 +70,14 @@ const AboutSection = () => {
                   className="relative h-40 rounded-2xl overflow-hidden shadow-lg"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <img
-                    className="w-full h-full object-cover"
-                    src="/image/carrousel1.jpg"
-                    alt="Tour Package 1"
-                  />
+                   <img src={About1} alt="Aventuras Increíbles" className="carousel-image" />
                   <div className="absolute inset-0 bg-black/20" />
                 </motion.div>
                 <motion.div
                   className="relative h-40 rounded-2xl overflow-hidden shadow-lg"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <img
-                    className="w-full h-full object-cover"
-                    src="/image/carrousel1.jpg"
-                    alt="Tour Package 2"
-                  />
+                  <img src={About1} alt="Aventuras Increíbles" className="carousel-image" />
                   <div className="absolute inset-0 bg-black/20" />
                 </motion.div>
               </div>
