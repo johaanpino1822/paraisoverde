@@ -27,7 +27,7 @@ const Sidebar = () => {
                     <li>
                         <NavLink to="/logout">
                             <FaSignOutAlt /> Cerrar Sesión
-                        </NavLink>
+                        </NavLink>   
                     </li>
                 </ul>
             </nav>

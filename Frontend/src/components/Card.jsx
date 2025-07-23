@@ -1,7 +1,7 @@
 import React from 'react';
 import image1 from '../image/paramo3.jpg';
 import image2 from '../image/paisaje.jpg';
-import paramo2 from '../image/paramo2.jpg';
+import paramo2 from '../image/paramo.jpg';
 import Card6 from '../image/Card6.jpg'
 import Card5 from '../image/Card5.jpg'
 
@@ -57,7 +57,7 @@ function CardGroup() {
             className="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-105"
           />
           <div className="p-6 bg-white">
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">Reserva Natural</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">Espacio  Natural</h3>
             <p className="text-gray-600 mb-4">
               Explora reservas naturales y sumérgete en la tranquilidad de la naturaleza.
             </p>

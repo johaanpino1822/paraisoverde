@@ -1,16 +1,21 @@
 const express = require('express');
-const { registerPublic, registerByAdmin, login } = require('../controllers/userController');
-const { verifyToken, isAdminOrSuperadmin } = require('../middleware/authMiddleware');
-
 const router = express.Router();
 
-// Registro público
-router.post('/register', registerPublic);
+const {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+} = require('../controllers/user.controller');
 
-// Registro por admin o superadmin
-router.post('/admin/register', verifyToken, isAdminOrSuperadmin, registerByAdmin);
+const { protect } = require('../middleware/authMiddleware');
 
-// Login
-router.post('/login', login);
+// Rutas públicas
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+
+// Rutas protegidas
+router.get('/profile', protect, getUserProfile);
+router.put('/profile', protect, updateUserProfile);
 
 module.exports = router;

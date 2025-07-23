@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 
-const HotelSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    location: { type: String, required: true },
-    price: { type: Number, required: true },
-    rating: { type: Number, default: 0 },
-    description: { type: String }
-}, { timestamps: true });
+const hotelSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  location: { type: String, required: true },
+  priceRange: { type: String, enum: ['$', '$$', '$$$', '$$$$'] },
+  amenities: [{ type: String }],
+  images: [{ type: String }],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  createdAt: { type: Date, default: Date.now },
+  isActive: { type: Boolean, default: true }
+});
 
-const Hotel = mongoose.model('Hotel', HotelSchema);
-module.exports = Hotel;
+module.exports = mongoose.model('Hotel', hotelSchema);

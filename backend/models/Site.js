@@ -1,11 +1,15 @@
-const mongoose = require('mongoose'); // Asegúrate de importar mongoose
+const mongoose = require('mongoose');
 
-const SiteSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    location: { type: String, required: true },
-    description: { type: String },
-    image: { type: String } // URL de la imagen del sitio
-}, { timestamps: true });
+const siteSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  location: { type: String, required: true },
+  category: { type: String, enum: ['beach', 'mountain', 'historical', 'cultural'] },
+  entranceFee: { type: Number },
+  images: [{ type: String }],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  createdAt: { type: Date, default: Date.now },
+  isActive: { type: Boolean, default: true }
+});
 
-const Site = mongoose.model('Site', SiteSchema);
-module.exports = Site;
+module.exports = mongoose.model('Site', siteSchema);
