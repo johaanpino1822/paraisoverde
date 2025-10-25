@@ -1,5 +1,6 @@
+// routes/AdminRoutes.jsx - VERSIÓN DEFINITIVA
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '../components/Admin/Layout/AdminLayout';
 import Dashboard from '../components/Admin/Dashboard';
 import UserList from '../components/Admin/Users/UserList';
@@ -10,115 +11,99 @@ import SiteList from '../components/Admin/Sites/SiteList';
 import SiteEdit from '../components/Admin/Sites/SiteEdit';
 import ProtectedRoute from './ProtectedRoute';
 
-// Componente para evitar repetición de códigos
-const ProtectedAdminRoute = ({ roles, element }) => (
-  <ProtectedRoute allowedRoles={roles}>
-    {element}
-  </ProtectedRoute>
-);
-
 const AdminRoutes = () => {
   return (
-    <AdminLayout>
-      <Routes>
+    <Routes>
+      <Route 
+        path="/*" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+            <AdminLayout />
+          </ProtectedRoute>
+        } 
+      >
+        <Route path="" element={<Navigate to="dashboard" replace />} />
+        
+        <Route path="dashboard" element={<Dashboard />} />
+
         <Route 
-          path="/" 
+          path="users" 
           element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<Dashboard />} 
-            />
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <UserList />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="users/new" 
+          element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <UserEdit />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="users/edit/:id" 
+          element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <UserEdit />
+            </ProtectedRoute>
           } 
         />
 
-        {/* Rutas de Usuarios */}
         <Route 
-          path="/users" 
+          path="hotels" 
           element={
-            <ProtectedAdminRoute 
-              roles={['superadmin']} 
-              element={<UserList />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <HotelList />
+            </ProtectedRoute>
           } 
         />
         <Route 
-          path="/users/new" 
+          path="hotels/new" 
           element={
-            <ProtectedAdminRoute 
-              roles={['superadmin']} 
-              element={<UserEdit />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <HotelEdit />
+            </ProtectedRoute>
           } 
         />
         <Route 
-          path="/users/edit/:id" 
+          path="hotels/edit/:id" 
           element={
-            <ProtectedAdminRoute 
-              roles={['superadmin']} 
-              element={<UserEdit />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <HotelEdit />
+            </ProtectedRoute>
           } 
         />
 
-        {/* Rutas de Hoteles */}
         <Route 
-          path="/hotels" 
+          path="sites" 
           element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<HotelList />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <SiteList />
+            </ProtectedRoute>
           } 
         />
         <Route 
-          path="/hotels/new" 
+          path="sites/new" 
           element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<HotelEdit />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <SiteEdit />
+            </ProtectedRoute>
           } 
         />
         <Route 
-          path="/hotels/edit/:id" 
+          path="sites/edit/:id" 
           element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<HotelEdit />} 
-            />
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+              <SiteEdit />
+            </ProtectedRoute>
           } 
         />
 
-        {/* Rutas de Sitios */}
-        <Route 
-          path="/sites" 
-          element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<SiteList />} 
-            />
-          } 
-        />
-        <Route 
-          path="/sites/new" 
-          element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<SiteEdit />} 
-            />
-          } 
-        />
-        <Route 
-          path="/sites/edit/:id" 
-          element={
-            <ProtectedAdminRoute 
-              roles={['admin', 'superadmin']} 
-              element={<SiteEdit />} 
-            />
-          } 
-        />
-      </Routes>
-    </AdminLayout>
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
+      </Route>
+    </Routes>
   );
 };
 

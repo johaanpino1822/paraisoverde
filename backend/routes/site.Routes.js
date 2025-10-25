@@ -3,10 +3,13 @@ const {
   createSite,
   getSites,
   getSiteById,
-  updateSite
+  updateSite,
+  deleteSite,
+  deleteSiteImage
 } = require('../controllers/site.Controller');
 
-const upload = require('../middleware/uploadMiddleware');
+// ✅ CORRECTO: Importar el objeto completo y luego desestructurar
+const { upload, handleMulterError } = require('../middleware/uploadMiddleware');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -15,9 +18,12 @@ const router = express.Router();
 router.get('/public', getSites);
 
 // 🔐 Rutas protegidas (solo admins pueden crear, editar y ver todo)
-router.post('/', protect, admin, upload.array('images'), createSite);
+// ✅ CORRECTO: Usar upload.array() y handleMulterError
+router.post('/', protect, admin, upload.array('images', 10), handleMulterError, createSite);
 router.get('/', protect, admin, getSites);
 router.get('/:id', protect, admin, getSiteById);
-router.put('/:id', protect, admin, upload.array('images'), updateSite);
+router.put('/:id', protect, admin, upload.array('images', 10), handleMulterError, updateSite);
+router.delete('/:id', protect, admin, deleteSite);
+router.delete('/:id/images/:imageName', protect, admin, deleteSiteImage);
 
 module.exports = router;

@@ -1,26 +1,28 @@
 const express = require('express');
-const router = express.Router();
 const {
   createHotel,
   getHotels,
   getHotelById,
-  updateHotel
-} = require('../controllers/hotel.controller');
+  updateHotel,
+  deleteHotel,
+  deleteHotelImage
+} = require('../controllers/hotel.Controller');
 
+// ✅ CORRECTO: Importar el objeto completo y luego desestructurar
+const { upload, handleMulterError } = require('../middleware/uploadMiddleware');
 const { protect, admin } = require('../middleware/authMiddleware');
-const multer = require('multer');
 
-// 📦 Almacenamiento en memoria (imágenes se codifican en base64 en el controlador)
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const router = express.Router();
 
-// 🔓 Ruta pública para obtener los hoteles sin autenticación
-router.get('/public', getHotels); // Esta es la nueva ruta pública
+// 🔓 Rutas públicas
+router.get('/public', getHotels);
 
 // 🔐 Rutas protegidas por autenticación y rol de admin
-router.get('/', protect, admin, getHotels);             // Obtener todos los hoteles (admin)
-router.get('/:id', protect, admin, getHotelById);       // Obtener hotel por ID (admin)
-router.post('/', protect, admin, upload.array('images'), createHotel); // Crear hotel
-router.put('/:id', protect, admin, upload.array('images'), updateHotel); // Actualizar hotel
+router.get('/', protect, admin, getHotels);
+router.get('/:id', protect, admin, getHotelById);
+router.post('/', protect, admin, upload.array('images', 10), handleMulterError, createHotel);
+router.put('/:id', protect, admin, upload.array('images', 10), handleMulterError, updateHotel);
+router.delete('/:id', protect, admin, deleteHotel);
+router.delete('/:id/images/:imageName', protect, admin, deleteHotelImage);
 
 module.exports = router;

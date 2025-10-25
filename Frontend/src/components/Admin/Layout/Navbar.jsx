@@ -11,7 +11,8 @@ import {
   Box,
   Divider,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Chip
 } from '@mui/material';
 import { 
   Menu as MenuIcon, 
@@ -20,17 +21,38 @@ import {
   Settings as SettingsIcon,
   ExitToApp as ExitToAppIcon,
   LightMode as LightModeIcon,
-  DarkMode as DarkModeIcon
+  DarkMode as DarkModeIcon,
+  Grass as GrassIcon,
+  Spa as SpaIcon,
+  EcoOutlined as EcoOutlinedIcon,
+  AdminPanelSettings as AdminPanelSettingsIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { styled, alpha, useTheme } from '@mui/material/styles';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+// Paleta de colores verde mejorada
+const greenTheme = {
+  primary: '#00791a',
+  secondary: '#064273',
+  accent: '#27ae60',
+  success: '#2ecc71',
+  warning: '#f39c12',
+  error: '#e74c3c',
+  dark: '#1a3c27',
+  light: '#e8f5e9',
+  gradient: 'linear-gradient(135deg, #00791a 0%, #064273 100%)',
+  gradientLight: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%)',
+  glass: 'rgba(255, 255, 255, 0.98)',
+  shadow: '0 20px 60px rgba(0, 121, 26, 0.15)',
+  shadowHover: '0 30px 80px rgba(0, 121, 26, 0.25)'
+};
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: `linear-gradient(90deg, ${alpha(theme.palette.primary.dark, 0.9)} 0%, ${alpha(theme.palette.primary.main, 0.95)} 100%)`,
-  backdropFilter: 'blur(12px)',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
-  borderBottom: `1px solid ${alpha(theme.palette.primary.light, 0.2)}`,
+  background: greenTheme.gradient,
+  backdropFilter: 'blur(20px)',
+  boxShadow: greenTheme.shadow,
+  borderBottom: `1px solid ${alpha(greenTheme.primary, 0.2)}`,
   transition: theme.transitions.create(['width', 'margin', 'background'], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.standard,
@@ -39,26 +61,32 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
-    borderRadius: 12,
+    borderRadius: 16,
     marginTop: theme.spacing(1),
-    minWidth: 220,
-    background: theme.palette.mode === 'dark' 
-      ? alpha(theme.palette.background.default, 0.9)
-      : alpha(theme.palette.background.paper, 0.95),
+    minWidth: 260,
+    background: greenTheme.glass,
     backdropFilter: 'blur(20px)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-    border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+    boxShadow: greenTheme.shadowHover,
+    border: `1px solid ${alpha(greenTheme.primary, 0.1)}`,
+    overflow: 'hidden',
     '& .MuiMenu-list': {
       padding: '8px 0',
     },
     '& .MuiMenuItem-root': {
-      padding: '10px 16px',
-      transition: 'all 0.2s ease',
+      padding: '12px 20px',
+      transition: 'all 0.3s ease',
+      margin: '0 8px',
+      borderRadius: 8,
       '&:hover': {
-        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+        backgroundColor: alpha(greenTheme.primary, 0.08),
+        transform: 'translateX(4px)',
+        '& .MuiListItemIcon-root': {
+          color: greenTheme.primary,
+          transform: 'scale(1.1)',
+        },
       },
       '& .MuiSvgIcon-root': {
-        color: theme.palette.primary.main,
+        color: greenTheme.primary,
       },
     },
   },
@@ -70,14 +98,14 @@ const WaveDivider = styled('div')(({ theme }) => ({
   left: 0,
   right: 0,
   height: '3px',
-  background: `linear-gradient(90deg, transparent, ${alpha(theme.palette.secondary.light, 0.7)}, transparent)`,
+  background: `linear-gradient(90deg, transparent, ${alpha(greenTheme.accent, 0.6)}, transparent)`,
   overflow: 'hidden',
   '&::after': {
     content: '""',
     position: 'absolute',
     width: '200%',
     height: '100%',
-    background: `linear-gradient(90deg, transparent, ${theme.palette.primary.light}, transparent)`,
+    background: `linear-gradient(90deg, transparent, ${greenTheme.success}, transparent)`,
     animation: 'waveAnimation 3s linear infinite',
   },
   '@keyframes waveAnimation': {
@@ -86,9 +114,46 @@ const WaveDivider = styled('div')(({ theme }) => ({
   }
 }));
 
-const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
+const EcoPulse = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: -2,
+  right: -2,
+  width: 12,
+  height: 12,
+  borderRadius: '50%',
+  background: greenTheme.success,
+  border: `2px solid ${greenTheme.light}`,
+  animation: 'pulse 2s infinite',
+  '@keyframes pulse': {
+    '0%': {
+      transform: 'scale(0.8)',
+      boxShadow: `0 0 0 0 ${alpha(greenTheme.success, 0.7)}`
+    },
+    '70%': {
+      transform: 'scale(1)',
+      boxShadow: `0 0 0 6px ${alpha(greenTheme.success, 0)}`
+    },
+    '100%': {
+      transform: 'scale(0.8)',
+      boxShadow: `0 0 0 0 ${alpha(greenTheme.success, 0)}`
+    }
+  }
+}));
+
+const StatusIndicator = styled('div')(({ theme, status }) => ({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: status === 'online' ? greenTheme.success : greenTheme.warning,
+  marginRight: 8,
+  boxShadow: `0 0 8px ${status === 'online' ? alpha(greenTheme.success, 0.5) : alpha(greenTheme.warning, 0.5)}`,
+  animation: status === 'online' ? 'pulse 2s infinite' : 'none'
+}));
+
+const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode, stats = {}, user = {} }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -98,6 +163,13 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleMenu = (event) => {
@@ -110,11 +182,38 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/login');
     handleClose();
   };
 
-  const notificationsCount = 5;
+  // Datos por defecto mejorados
+  const notificationsCount = stats.notifications || 3;
+  const ecoHotels = stats.ecoHotels || 12;
+  const pendingReviews = stats.pendingReviews || 5;
+  const userData = {
+    name: user?.name || 'Administrador',
+    role: user?.role || 'Super Admin',
+    email: user?.email || 'admin@ecohotels.com',
+    status: 'online'
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('es-ES', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <StyledAppBar
@@ -126,13 +225,14 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
           width: `calc(100% - 280px)`,
         }),
         ...(scrolled && {
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-          background: `linear-gradient(90deg, ${alpha(theme.palette.primary.dark, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.98)} 100%)`,
+          boxShadow: greenTheme.shadowHover,
+          background: `linear-gradient(135deg, ${alpha(greenTheme.primary, 0.98)} 0%, ${alpha(greenTheme.dark, 0.95)} 100%)`,
         }),
       }}
     >
       <WaveDivider />
-      <Toolbar sx={{ minHeight: '64px!important' }}>
+      <Toolbar sx={{ minHeight: '70px!important', py: 1 }}>
+        {/* Botón del menú */}
         <IconButton
           color="inherit"
           aria-label="open drawer"
@@ -140,74 +240,143 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
           edge="start"
           sx={{
             marginRight: 3,
-            transform: 'scale(1.1)',
-            transition: 'transform 0.3s ease',
+            backgroundColor: alpha(greenTheme.light, 0.1),
+            borderRadius: '12px',
+            padding: '10px',
+            transition: 'all 0.3s ease',
             '&:hover': {
-              transform: 'scale(1.2)',
-              backgroundColor: alpha(theme.palette.primary.light, 0.2),
+              backgroundColor: alpha(greenTheme.light, 0.2),
+              transform: 'scale(1.1) rotate(90deg)',
             }
           }}
         >
           <motion.div
             animate={{ rotate: open ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, type: "spring" }}
           >
             <MenuIcon fontSize="medium" />
           </motion.div>
         </IconButton>
         
-        <Typography 
-          variant="h6" 
-          noWrap 
-          component="div" 
-          sx={{ 
-            flexGrow: 1,
-            fontWeight: 700,
-            letterSpacing: '0.5px',
-            background: `linear-gradient(90deg, ${theme.palette.common.white}, ${theme.palette.secondary.light})`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          }}
-        >
-          Panel de Administración
-        </Typography>
+        {/* Título y estadísticas */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <SpaIcon sx={{ fontSize: 28, color: greenTheme.light }} />
+            </motion.div>
+            <Typography 
+              variant="h5" 
+              noWrap 
+              component="div" 
+              sx={{ 
+                fontWeight: 800,
+                letterSpacing: '0.5px',
+                background: `linear-gradient(135deg, ${greenTheme.light}, #ffffff)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              }}
+            >
+              Paraiso Admin
+            </Typography>
+          </Box>
+          
+          {/* Stats en tiempo real */}
+          <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1.5 }}>
+            <Chip
+              icon={<GrassIcon sx={{ fontSize: 16 }} />}
+              label={`${ecoHotels} Hoteles Verdes`}
+              variant="outlined"
+              sx={{
+                backgroundColor: alpha(greenTheme.success, 0.1),
+                border: `1px solid ${alpha(greenTheme.success, 0.3)}`,
+                color: greenTheme.light,
+                fontWeight: 600,
+                '& .MuiChip-icon': {
+                  color: greenTheme.success,
+                }
+              }}
+            />
+            
+            <Chip
+              icon={<NotificationsIcon sx={{ fontSize: 16 }} />}
+              label={`${pendingReviews} Revisiones`}
+              variant="outlined"
+              sx={{
+                backgroundColor: alpha(greenTheme.warning, 0.1),
+                border: `1px solid ${alpha(greenTheme.warning, 0.3)}`,
+                color: greenTheme.light,
+                fontWeight: 600,
+                '& .MuiChip-icon': {
+                  color: greenTheme.warning,
+                }
+              }}
+            />
+
+            {/* Reloj en tiempo real */}
+            <Box sx={{ 
+              display: { xs: 'none', xl: 'flex' }, 
+              alignItems: 'center', 
+              gap: 1,
+              padding: '4px 12px',
+              borderRadius: '20px',
+              backgroundColor: alpha(greenTheme.light, 0.1),
+              border: `1px solid ${alpha(greenTheme.light, 0.2)}`,
+            }}>
+              <Typography variant="caption" fontWeight="600" color={greenTheme.light}>
+                {formatTime(currentTime)}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
         
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        {/* Controles de usuario */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {/* Toggle Theme */}
           <IconButton
             size="large"
             color="inherit"
             onClick={toggleTheme}
             sx={{
-              backgroundColor: alpha(theme.palette.primary.light, 0.1),
-              borderRadius: '50%',
+              backgroundColor: alpha(greenTheme.light, 0.1),
+              borderRadius: '12px',
               padding: '8px',
               transition: 'all 0.3s ease',
               '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.light, 0.2),
-                transform: 'rotate(30deg)',
+                backgroundColor: alpha(greenTheme.light, 0.2),
+                transform: 'rotate(30deg) scale(1.1)',
               }
             }}
           >
-            {darkMode ? (
-              <LightModeIcon fontSize="small" />
-            ) : (
-              <DarkModeIcon fontSize="small" />
-            )}
+            <motion.div
+              animate={{ rotate: darkMode ? 180 : 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {darkMode ? (
+                <LightModeIcon fontSize="small" />
+              ) : (
+                <DarkModeIcon fontSize="small" />
+              )}
+            </motion.div>
           </IconButton>
           
+          {/* Notifications */}
           <IconButton
             size="large"
             aria-label="show notifications"
             color="inherit"
             sx={{
               position: 'relative',
-              backgroundColor: alpha(theme.palette.primary.light, 0.1),
-              borderRadius: '50%',
+              backgroundColor: alpha(greenTheme.light, 0.1),
+              borderRadius: '12px',
               padding: '8px',
               transition: 'all 0.3s ease',
               '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.light, 0.2),
+                backgroundColor: alpha(greenTheme.light, 0.2),
                 transform: 'translateY(-2px)',
               }
             }}
@@ -217,22 +386,21 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
               color="error"
               sx={{
                 '& .MuiBadge-badge': {
-                  right: 3,
+                  right: 4,
                   top: 8,
-                  boxShadow: `0 0 8px ${theme.palette.error.main}`,
+                  backgroundColor: greenTheme.warning,
+                  boxShadow: `0 0 8px ${alpha(greenTheme.warning, 0.5)}`,
                   animation: 'pulse 1.5s infinite',
+                  fontSize: '0.7rem',
+                  fontWeight: 'bold',
                 },
-                '@keyframes pulse': {
-                  '0%': { boxShadow: `0 0 0 0 ${alpha(theme.palette.error.main, 0.7)}` },
-                  '70%': { boxShadow: `0 0 0 8px ${alpha(theme.palette.error.main, 0)}` },
-                  '100%': { boxShadow: `0 0 0 0 ${alpha(theme.palette.error.main, 0)}` },
-                }
               }}
             >
               <NotificationsIcon fontSize="small" />
             </Badge>
           </IconButton>
           
+          {/* User Menu */}
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -241,30 +409,35 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
             onClick={handleMenu}
             color="inherit"
             sx={{
-              backgroundColor: alpha(theme.palette.primary.light, 0.1),
-              borderRadius: '50%',
-              padding: '8px',
+              position: 'relative',
+              backgroundColor: alpha(greenTheme.light, 0.1),
+              borderRadius: '12px',
+              padding: '6px',
               transition: 'all 0.3s ease',
               '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.light, 0.2),
-                transform: 'scale(1.1)',
+                backgroundColor: alpha(greenTheme.light, 0.2),
+                transform: 'scale(1.05)',
               }
             }}
           >
+            <EcoPulse />
             <Avatar 
               sx={{ 
-                width: 32, 
-                height: 32,
-                bgcolor: theme.palette.secondary.main,
-                boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.light, 0.5)}`,
+                width: 36, 
+                height: 36,
+                background: greenTheme.gradient,
+                boxShadow: `0 4px 12px ${alpha(greenTheme.primary, 0.3)}`,
                 transition: 'all 0.3s ease',
+                fontWeight: 'bold',
+                fontSize: '1rem',
               }}
             >
-              A
+              <AdminPanelSettingsIcon sx={{ fontSize: 18 }} />
             </Avatar>
           </IconButton>
         </Box>
         
+        {/* Menú de usuario */}
         <StyledMenu
           id="menu-appbar"
           anchorEl={anchorEl}
@@ -280,14 +453,56 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
           onClose={handleClose}
           disableScrollLock={true}
         >
+          {/* Header del usuario */}
+          <MenuItem sx={{ flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Avatar 
+                sx={{ 
+                  width: 40, 
+                  height: 40,
+                  background: greenTheme.gradient,
+                  mr: 2
+                }}
+              >
+                <AdminPanelSettingsIcon />
+              </Avatar>
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography variant="body1" fontWeight={700} color={greenTheme.dark}>
+                  {userData.name}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  {userData.email}
+                </Typography>
+              </Box>
+              <StatusIndicator status={userData.status} />
+            </Box>
+            <Chip 
+              label={userData.role} 
+              size="small" 
+              color="success" 
+              variant="outlined"
+              sx={{ fontWeight: 600 }}
+            />
+            <Typography variant="caption" color="textSecondary" sx={{ fontStyle: 'italic' }}>
+              {formatDate(currentTime)}
+            </Typography>
+          </MenuItem>
+          
+          <Divider sx={{ 
+            my: 1, 
+            background: `linear-gradient(90deg, transparent, ${alpha(greenTheme.primary, 0.2)}, transparent)`,
+          }} />
+          
           <MenuItem onClick={() => navigate('/admin/profile')}>
             <ListItemIcon>
               <PersonIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>
-              <Typography variant="body1" fontWeight={500}>Perfil</Typography>
+              <Typography variant="body1" fontWeight={600} color={greenTheme.dark}>
+                Mi Perfil
+              </Typography>
               <Typography variant="caption" color="textSecondary">
-                Configura tu cuenta
+                Administrar cuenta
               </Typography>
             </ListItemText>
           </MenuItem>
@@ -297,21 +512,28 @@ const AdminNavbar = ({ open, toggleDrawer, toggleTheme, darkMode }) => {
               <SettingsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>
-              <Typography variant="body1" fontWeight={500}>Configuración</Typography>
+              <Typography variant="body1" fontWeight={600} color={greenTheme.dark}>
+                Configuración
+              </Typography>
               <Typography variant="caption" color="textSecondary">
-                Personaliza el sistema
+                Personalizar sistema
               </Typography>
             </ListItemText>
           </MenuItem>
           
-          <Divider sx={{ my: 1 }} />
+          <Divider sx={{ 
+            my: 1, 
+            background: `linear-gradient(90deg, transparent, ${alpha(greenTheme.primary, 0.2)}, transparent)`,
+          }} />
           
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <ExitToAppIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>
-              <Typography variant="body1" fontWeight={500}>Cerrar sesión</Typography>
+              <Typography variant="body1" fontWeight={600} color={greenTheme.dark}>
+                Cerrar Sesión
+              </Typography>
               <Typography variant="caption" color="textSecondary">
                 Salir del sistema
               </Typography>

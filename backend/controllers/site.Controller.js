@@ -1,108 +1,229 @@
+// controllers/site.Controller.js
 const Site = require('../models/Site');
+const path = require('path');
+const fs = require('fs');
 
-// Crear un nuevo sitio
-exports.createSite = async (req, res) => {
+// Ruta base para uploads
+const UPLOADS_BASE_DIR = path.join(__dirname, '..', '..', 'uploads');
+
+// Crear sitio
+const createSite = async (req, res) => {
   try {
-    const {
+    const { name, description, location, category, entranceFee, highlights } = req.body;
+    
+    // Procesar imágenes con estructura completa
+    const images = [];
+    if (req.files && req.files.length > 0) {
+      req.files.forEach(file => {
+        images.push({
+          filename: file.filename,
+          originalName: file.originalname,
+          path: `/uploads/sites/${file.filename}`,
+          uploadedAt: new Date()
+        });
+      });
+    }
+
+    const site = new Site({
       name,
       description,
       location,
       category,
-      entranceFee,
-      highlights
-    } = req.body;
-
-    const parsedHighlights = typeof highlights === 'string'
-      ? highlights.split(',').map(h => h.trim())
-      : [];
-
-    const images = req.files.map(file =>
-      `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
-    );
-
-    const newSite = new Site({
-      name,
-      description,
-      location,
-      category,
-      entranceFee: parseFloat(entranceFee),
-      highlights: parsedHighlights,
-      images
+      entranceFee: entranceFee || 0,
+      highlights: highlights ? (typeof highlights === 'string' ? highlights.split(',') : highlights) : [],
+      images,
+      createdBy: req.user.id
     });
 
-    await newSite.save();
-    res.status(201).json(newSite);
+    await site.save();
+    
+    // Respuesta con URLs completas
+    const siteResponse = {
+      ...site.toObject(),
+      images: site.images.map(img => ({
+        ...img,
+        url: `http://localhost:5000${img.path}`
+      }))
+    };
+    
+    res.status(201).json(siteResponse);
   } catch (error) {
-    console.error('Error en createSite:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error creating site:', error);
+    
+    // Limpiar archivos subidos si hay error
+    if (req.files && req.files.length > 0) {
+      req.files.forEach(file => {
+        const filePath = path.join(UPLOADS_BASE_DIR, 'sites', file.filename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      });
+    }
+    
+    res.status(500).json({ message: 'Error al crear el sitio: ' + error.message });
   }
 };
 
 // Obtener todos los sitios
-exports.getSites = async (req, res) => {
+const getSites = async (req, res) => {
   try {
-    const sites = await Site.find();
-    res.json(sites);
+    const sites = await Site.find({ isActive: true })
+      .populate('createdBy', 'name email');
+    
+    // Agregar URLs completas para el frontend
+    const sitesWithFullUrls = sites.map(site => ({
+      ...site.toObject(),
+      images: site.images.map(img => ({
+        ...img,
+        url: `http://localhost:5000${img.path}`
+      }))
+    }));
+    
+    res.json(sitesWithFullUrls);
   } catch (error) {
-    console.error('Error en getSites:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching sites:', error);
+    res.status(500).json({ message: 'Error al obtener los sitios' });
   }
 };
 
-// Obtener sitio por ID
-exports.getSiteById = async (req, res) => {
+// Obtener sitio por ID - FUNCIÓN FALTANTE
+const getSiteById = async (req, res) => {
   try {
-    const site = await Site.findById(req.params.id);
-    if (!site) {
-      return res.status(404).json({ message: 'Sitio no encontrado' });
-    }
-    res.json(site);
-  } catch (error) {
-    console.error('Error en getSiteById:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Actualizar sitio existente
-exports.updateSite = async (req, res) => {
-  try {
-    const {
-      name,
-      description,
-      location,
-      category,
-      entranceFee,
-      highlights
-    } = req.body;
-
-    const parsedHighlights = typeof highlights === 'string'
-      ? highlights.split(',').map(h => h.trim())
-      : [];
-
-    const images = req.files?.map(file =>
-      `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
-    ) || [];
-
-    const site = await Site.findById(req.params.id);
+    const site = await Site.findById(req.params.id)
+      .populate('createdBy', 'name email');
+    
     if (!site) {
       return res.status(404).json({ message: 'Sitio no encontrado' });
     }
 
-    site.name = name;
-    site.description = description;
-    site.location = location;
-    site.category = category;
-    site.entranceFee = parseFloat(entranceFee);
-    site.highlights = parsedHighlights;
+    // Agregar URLs completas para las imágenes
+    const siteWithFullUrls = {
+      ...site.toObject(),
+      images: site.images.map(img => ({
+        ...img,
+        url: `http://localhost:5000${img.path}`
+      }))
+    };
+    
+    res.json(siteWithFullUrls);
+  } catch (error) {
+    console.error('Error fetching site:', error);
+    res.status(500).json({ message: 'Error al obtener el sitio' });
+  }
+};
 
-    if (images.length > 0) {
-      site.images.push(...images); // Agrega nuevas imágenes sin borrar las anteriores
+// Actualizar sitio
+const updateSite = async (req, res) => {
+  try {
+    const { name, description, location, category, entranceFee, highlights } = req.body;
+    
+    const existingSite = await Site.findById(req.params.id);
+    if (!existingSite) {
+      return res.status(404).json({ message: 'Sitio no encontrado' });
     }
 
+    // Procesar nuevas imágenes
+    let images = [...existingSite.images];
+    if (req.files && req.files.length > 0) {
+      req.files.forEach(file => {
+        images.push({
+          filename: file.filename,
+          originalName: file.originalname,
+          path: `/uploads/sites/${file.filename}`,
+          uploadedAt: new Date()
+        });
+      });
+    }
+
+    const updatedSite = await Site.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        description,
+        location,
+        category,
+        entranceFee: entranceFee || existingSite.entranceFee,
+        highlights: highlights ? (typeof highlights === 'string' ? highlights.split(',') : highlights) : existingSite.highlights,
+        images,
+      },
+      { new: true, runValidators: true }
+    );
+
+    // Respuesta con URLs completas
+    const siteResponse = {
+      ...updatedSite.toObject(),
+      images: updatedSite.images.map(img => ({
+        ...img,
+        url: `http://localhost:5000${img.path}`
+      }))
+    };
+
+    res.json(siteResponse);
+  } catch (error) {
+    console.error('Error updating site:', error);
+    res.status(500).json({ message: 'Error al actualizar el sitio' });
+  }
+};
+
+// Eliminar sitio (soft delete)
+const deleteSite = async (req, res) => {
+  try {
+    const site = await Site.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      { new: true }
+    );
+
+    if (!site) {
+      return res.status(404).json({ message: 'Sitio no encontrado' });
+    }
+
+    res.json({ message: 'Sitio eliminado correctamente' });
+  } catch (error) {
+    console.error('Error deleting site:', error);
+    res.status(500).json({ message: 'Error al eliminar el sitio' });
+  }
+};
+
+// Eliminar imagen específica
+const deleteSiteImage = async (req, res) => {
+  try {
+    const { id, imageName } = req.params;
+    
+    const site = await Site.findById(id);
+    if (!site) {
+      return res.status(404).json({ message: 'Sitio no encontrado' });
+    }
+
+    // Encontrar la imagen a eliminar
+    const imageToDelete = site.images.find(img => img.filename === imageName);
+    if (!imageToDelete) {
+      return res.status(404).json({ message: 'Imagen no encontrada' });
+    }
+
+    // Eliminar la imagen del array
+    site.images = site.images.filter(img => img.filename !== imageName);
     await site.save();
-    res.json(site);
+
+    // Eliminar el archivo físico
+    const imagePath = path.join(UPLOADS_BASE_DIR, 'sites', imageName);
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+      console.log('🗑️ Imagen eliminada:', imagePath);
+    }
+
+    res.json({ message: 'Imagen eliminada correctamente' });
   } catch (error) {
-    console.error('Error en updateSite:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error deleting image:', error);
+    res.status(500).json({ message: 'Error al eliminar la imagen' });
   }
+};
+
+module.exports = {
+  createSite,
+  getSites,
+  getSiteById, // ✅ AHORA ESTÁ INCLUIDA
+  updateSite,
+  deleteSite,
+  deleteSiteImage
 };

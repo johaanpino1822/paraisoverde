@@ -1,13 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid');
 
 const connectDB = async () => {
   try {
-    // Configuración optimizada de conexión a MongoDB
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 30000,
       maxPoolSize: 50,
@@ -15,8 +10,9 @@ const connectDB = async () => {
     });
 
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`📊 Base de datos: ${conn.connection.name}`);
     
-    // Verificar e inicializar datos esenciales
+    // Inicializar datos esenciales
     await initializeEssentialData();
   } catch (err) {
     console.error(`❌ MongoDB Connection Error: ${err.message}`);
@@ -27,82 +23,49 @@ const connectDB = async () => {
 const initializeEssentialData = async () => {
   try {
     const User = require('../models/User');
-    const Role = require('../models/Role'); // Asumiendo que tienes un modelo de roles
 
-    // 1. Crear roles del sistema si no existen
-    const roles = ['superadmin', 'admin', 'user', 'guest'];
-    for (const roleName of roles) {
-      await Role.findOneAndUpdate(
-        { name: roleName },
-        { name: roleName, permissions: getDefaultPermissions(roleName) },
-        { upsert: true, new: true }
-      );
-    }
-    console.log('🔄 Roles del sistema verificados/creados');
-
-    // 2. Crear superadmin inicial (solo si no existe)
-    const superAdminEmail = process.env.SUPERADMIN_EMAIL || 'superadmin@example.com';
-    const superAdminExists = await User.findOne({ email: superAdminEmail });
+    console.log('🔄 INICIANDO CONFIGURACIÓN DE BASE DE DATOS...');
+    
+    const superAdminEmail = process.env.SUPERADMIN_INITIAL_EMAIL || 'superadmin@paraisoverde.com';
+    const superAdminPassword = process.env.SUPERADMIN_INITIAL_PASSWORD || 'AdminParaiso123!';
+    
+    // Verificar si ya existe el superadmin
+    const superAdminExists = await User.findOne({ 
+      $or: [
+        { email: superAdminEmail },
+        { username: 'superadmin' }
+      ] 
+    });
     
     if (!superAdminExists) {
-      const tempPassword = process.env.SUPERADMIN_INITIAL_PASSWORD || uuidv4();
-      const hashedPassword = await bcrypt.hash(tempPassword, 12);
-      
-      const superAdmin = new User({
-        username: 'superadmin',
+      // Crear nuevo superadmin
+      const newSuperAdmin = new User({
+        username: process.env.SUPERADMIN_INITIAL_USERNAME || 'superadmin',
         email: superAdminEmail,
-        password: hashedPassword,
+        password: superAdminPassword,
         role: 'superadmin',
-        isVerified: true,
-        apiKey: uuidv4()
+        isVerified: true
       });
 
-      await superAdmin.save();
-      
-      // IMPORTANTE: Mostrar la contraseña solo en desarrollo
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`🔑 Superadmin creado - Contraseña temporal: ${tempPassword}`);
-      } else {
-        console.log('🔑 Superadmin creado - Verifica el correo para la contraseña');
-      }
+      await newSuperAdmin.save();
+      console.log(`✅ SUPERADMIN CREADO: ${superAdminEmail}`);
+      console.log(`🔑 Contraseña: ${superAdminPassword}`);
+    } else {
+      console.log('✅ Superadmin ya existe en la base de datos');
+      console.log(`📧 Email: ${superAdminExists.email}`);
+      console.log(`👤 Username: ${superAdminExists.username}`);
+      console.log(`🎯 Role: ${superAdminExists.role}`);
     }
 
-    // 3. Otras inicializaciones necesarias...
-    await initializeDefaultSettings();
+    // Contar usuarios totales
+    const userCount = await User.countDocuments();
+    console.log(`👥 Total de usuarios en la base de datos: ${userCount}`);
+
+    console.log('🎉 Configuración de base de datos completada');
 
   } catch (err) {
     console.error(`⚠️ Error en inicialización de datos: ${err.message}`);
   }
-};
-
-// Función para permisos por defecto (extensible)
-const getDefaultPermissions = (role) => {
-  const permissions = {
-    superadmin: ['*'],
-    admin: ['users:read', 'users:write', 'content:manage'],
-    user: ['profile:manage', 'content:create'],
-    guest: ['content:read']
-  };
-  return permissions[role] || [];
-};
-
-// Función para configuraciones iniciales
-const initializeDefaultSettings = async () => {
-  const Setting = require('../models/Setting');
-  const defaultSettings = [
-    { key: 'siteName', value: 'Paraíso Verde', isPublic: true },
-    { key: 'maintenanceMode', value: false, isPublic: true },
-    { key: 'maxLoginAttempts', value: 5, isPublic: false }
-  ];
-
-  for (const setting of defaultSettings) {
-    await Setting.findOneAndUpdate(
-      { key: setting.key },
-      setting,
-      { upsert: true }
-    );
-  }
-  console.log('⚙️ Configuraciones por defecto inicializadas');
 };
 
 module.exports = connectDB;

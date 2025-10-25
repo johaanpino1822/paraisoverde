@@ -1,9 +1,12 @@
+// features/Auth/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  userInfo: localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null,
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  isLoading: true, // Cambiado a true por defecto para la verificación inicial
+  error: null
 };
 
 const authSlice = createSlice({
@@ -11,20 +14,50 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      // ✅ Solo guarda la información del usuario
-      state.userInfo = action.payload.user;
-      localStorage.setItem('userInfo', JSON.stringify(action.payload.user));
-      // ✅ Guarda también el token por separado si deseas
-      localStorage.setItem('token', action.payload.token);
+      const { user, token } = action.payload;
+      state.user = user;
+      state.token = token;
+      state.isAuthenticated = true;
+      state.isLoading = false;
+      state.error = null;
     },
-    logout: (state) => {
-      state.userInfo = null;
-      localStorage.removeItem('userInfo');
-      localStorage.removeItem('token');
+    clearCredentials: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.error = null;
     },
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    clearError: (state) => {
+      state.error = null;
+    }
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { 
+  setCredentials, 
+  clearCredentials, 
+  updateUser, 
+  setLoading, 
+  setError, 
+  clearError 
+} = authSlice.actions;
+
+// Selectores
+export const selectCurrentUser = (state) => state.auth.user;
+export const selectCurrentToken = (state) => state.auth.token;
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+export const selectAuthIsLoading = (state) => state.auth.isLoading;
+export const selectAuthError = (state) => state.auth.error;
 
 export default authSlice.reducer;

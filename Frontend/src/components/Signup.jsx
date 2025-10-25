@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaLeaf } from "react-icons/fa";
-import logo from "../image/logo1.png";
+import axios from 'axios';
+import logo from "../image/logo3.png";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -16,8 +17,26 @@ export default function Signup() {
     const [success, setSuccess] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [apiError, setApiError] = useState("");
     
     const navigate = useNavigate();
+
+    // Paleta de colores verde
+    const greenTheme = {
+        primary: '#00791a',
+        secondary: '#064273',
+        accent: '#27ae60',
+        success: '#2ecc71',
+        warning: '#f39c12',
+        error: '#e74c3c',
+        dark: '#1a3c27',
+        light: '#e8f5e9',
+        gradient: 'linear-gradient(135deg, #00791a 0%, #064273 100%)',
+        gradientLight: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%)'
+    };
+
+    // Configurar axios base URL
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
     // Validaciones en tiempo real
     useEffect(() => {
@@ -44,6 +63,7 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setApiError("");
         
         // Validación final
         const finalErrors = {};
@@ -52,7 +72,7 @@ export default function Signup() {
         if (!formData.password) finalErrors.password = 'Requerido';
         if (!formData.confirmPassword) finalErrors.confirmPassword = 'Requerido';
         if (formData.password !== formData.confirmPassword) {
-            finalErrors.confirmPassword = 'No coinciden';
+            finalErrors.confirmPassword = 'Las contraseñas no coinciden';
         }
         
         if (Object.keys(finalErrors).length > 0) {
@@ -62,29 +82,59 @@ export default function Signup() {
         
         setIsSubmitting(true);
         
-        // Simulación de envío
-        setTimeout(() => {
+        try {
+            // ENVÍO REAL AL BACKEND
+            const response = await axios.post(`${API_URL}/users/register`, {
+                username: formData.username,
+                email: formData.email,
+                password: formData.password
+            });
+
+            console.log('✅ Usuario registrado:', response.data);
+            
             setIsSubmitting(false);
             setSuccess(true);
-            setTimeout(() => navigate('/'), 2000);
-        }, 1500);
+            
+            // Redirigir después de 2 segundos
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+            
+        } catch (error) {
+            console.error('❌ Error en registro:', error);
+            setIsSubmitting(false);
+            
+            if (error.response) {
+                // Error del servidor
+                setApiError(error.response.data.message || 'Error en el servidor');
+            } else if (error.request) {
+                // Error de conexión
+                setApiError('Error de conexión con el servidor');
+            } else {
+                // Otro error
+                setApiError('Error inesperado');
+            }
+        }
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Limpiar error de API cuando el usuario empiece a escribir
+        if (apiError) setApiError("");
     };
 
     return (
-        <div className= "min-h-screen flex items-center  mt-24  justify-center bg-gradient-to-br from-blue-50 to-cyan-50">
-            <div className="w-full max-w-6xl mx-4 bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="min-h-screen flex items-center mt-24 justify-center bg-gradient-to-br from-green-50 to-blue-50">
+            <div className="w-full max-w-6xl mx-4 bg-white rounded-2xl shadow-xl overflow-hidden border border-green-100">
                 <div className="flex flex-col md:flex-row">
-                    {/* Sección de Bienvenida - Mejorada */}
+                    {/* Sección de Bienvenida */}
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="w-full md:w-1/2 bg-gradient-to-br from-blue-600 to-cyan-500 p-8 text-white"
+                        className="w-full md:w-1/2 p-8 text-white"
+                        style={{ background: greenTheme.gradient }}
                     >
                         <div className="flex flex-col h-full justify-center items-center text-center">
                             <motion.div
@@ -103,8 +153,8 @@ export default function Signup() {
                             </motion.div>
                             
                             <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Paraíso Verde!</h2>
-                            <p className="text-blue-100 mb-8 max-w-md">
-                                Descubre los destinos más exóticos y vive experiencias inolvidables con nuestra plataforma.
+                            <p className="text-green-100 mb-8 max-w-md">
+                                Descubre los destinos más exóticos y vive experiencias inolvidables con nuestra plataforma ecológica.
                             </p>
                             
                             <motion.div
@@ -127,26 +177,10 @@ export default function Signup() {
                                     />
                                 ))}
                             </motion.div>
-                            
-                            <div className="mt-12 hidden md:block">
-                                <motion.div
-                                    animate={{ 
-                                        x: [-10, 10, -10],
-                                        rotate: [0, 5, -5, 0]
-                                    }}
-                                    transition={{
-                                        duration: 12,
-                                        repeat: Infinity,
-                                        repeatType: "reverse"
-                                    }}
-                                >
-                                    <FaLeaf className="text-4xl text-blue-300 opacity-70" />
-                                </motion.div>
-                            </div>
                         </div>
                     </motion.div>
 
-                    {/* Sección de Registro - Mejorada */}
+                    {/* Sección de Registro */}
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -159,12 +193,29 @@ export default function Signup() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.4 }}
-                                    className="text-2xl font-bold text-gray-800"
+                                    className="text-2xl font-bold"
+                                    style={{ color: greenTheme.dark }}
                                 >
                                     Crear Cuenta
                                 </motion.h2>
                                 <p className="text-gray-600">Completa el formulario para registrarte</p>
                             </div>
+
+                            {/* Mostrar error de API */}
+                            {apiError && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mb-4 p-3 rounded-lg border"
+                                    style={{ 
+                                        backgroundColor: `${greenTheme.error}15`,
+                                        borderColor: greenTheme.error,
+                                        color: greenTheme.error
+                                    }}
+                                >
+                                    <strong>Error:</strong> {apiError}
+                                </motion.div>
+                            )}
 
                             {success ? (
                                 <motion.div
@@ -172,21 +223,35 @@ export default function Signup() {
                                     animate={{ scale: 1, opacity: 1 }}
                                     className="text-center py-6"
                                 >
-                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div 
+                                        className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                                        style={{ backgroundColor: `${greenTheme.success}20` }}
+                                    >
+                                        <svg 
+                                            className="w-8 h-8" 
+                                            style={{ color: greenTheme.success }} 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
                                     </div>
-                                    <h3 className="text-xl font-bold text-green-700 mb-2">¡Registro Exitoso!</h3>
-                                    <p className="text-gray-600">Redirigiendo...</p>
+                                    <h3 
+                                        className="text-xl font-bold mb-2"
+                                        style={{ color: greenTheme.success }}
+                                    >
+                                        ¡Registro Exitoso!
+                                    </h3>
+                                    <p className="text-gray-600">Redirigiendo al login...</p>
                                 </motion.div>
                             ) : (
                                 <form onSubmit={handleSubmit}>
                                     {/* Nombre de usuario */}
                                     <div className="mb-5">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                                            <FaUser className="mr-2 text-blue-600" />
-                                            Nombre de usuario
+                                        <label className="block text-sm font-medium mb-1 flex items-center">
+                                            <FaUser className="mr-2" style={{ color: greenTheme.primary }} />
+                                            <span style={{ color: greenTheme.dark }}>Nombre de usuario</span>
                                         </label>
                                         <div className="relative">
                                             <input
@@ -194,9 +259,11 @@ export default function Signup() {
                                                 name="username"
                                                 value={formData.username}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 pl-10 rounded-lg border ${
-                                                    errors.username ? 'border-red-500' : 'border-gray-300'
-                                                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                                                className={`w-full px-4 py-3 pl-10 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                                                    errors.username 
+                                                        ? 'border-red-500 focus:ring-red-500' 
+                                                        : `border-gray-300 focus:ring-[${greenTheme.primary}]`
+                                                }`}
                                                 placeholder="Ej: viajero123"
                                             />
                                             <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -214,9 +281,9 @@ export default function Signup() {
 
                                     {/* Email */}
                                     <div className="mb-5">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                                            <FaEnvelope className="mr-2 text-blue-600" />
-                                            Correo electrónico
+                                        <label className="block text-sm font-medium mb-1 flex items-center">
+                                            <FaEnvelope className="mr-2" style={{ color: greenTheme.primary }} />
+                                            <span style={{ color: greenTheme.dark }}>Correo electrónico</span>
                                         </label>
                                         <div className="relative">
                                             <input
@@ -224,9 +291,11 @@ export default function Signup() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 pl-10 rounded-lg border ${
-                                                    errors.email ? 'border-red-500' : 'border-gray-300'
-                                                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                                                className={`w-full px-4 py-3 pl-10 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                                                    errors.email 
+                                                        ? 'border-red-500 focus:ring-red-500' 
+                                                        : `border-gray-300 focus:ring-[${greenTheme.primary}]`
+                                                }`}
                                                 placeholder="tucorreo@ejemplo.com"
                                             />
                                             <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -244,9 +313,9 @@ export default function Signup() {
 
                                     {/* Contraseña */}
                                     <div className="mb-5">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                                            <FaLock className="mr-2 text-blue-600" />
-                                            Contraseña
+                                        <label className="block text-sm font-medium mb-1 flex items-center">
+                                            <FaLock className="mr-2" style={{ color: greenTheme.primary }} />
+                                            <span style={{ color: greenTheme.dark }}>Contraseña</span>
                                         </label>
                                         <div className="relative">
                                             <input
@@ -254,16 +323,18 @@ export default function Signup() {
                                                 name="password"
                                                 value={formData.password}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 pl-10 pr-10 rounded-lg border ${
-                                                    errors.password ? 'border-red-500' : 'border-gray-300'
-                                                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                                                className={`w-full px-4 py-3 pl-10 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                                                    errors.password 
+                                                        ? 'border-red-500 focus:ring-red-500' 
+                                                        : `border-gray-300 focus:ring-[${greenTheme.primary}]`
+                                                }`}
                                                 placeholder="Mínimo 6 caracteres"
                                             />
                                             <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors"
                                             >
                                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                                             </button>
@@ -281,9 +352,9 @@ export default function Signup() {
 
                                     {/* Confirmar Contraseña */}
                                     <div className="mb-6">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                                            <FaLock className="mr-2 text-blue-600" />
-                                            Confirmar Contraseña
+                                        <label className="block text-sm font-medium mb-1 flex items-center">
+                                            <FaLock className="mr-2" style={{ color: greenTheme.primary }} />
+                                            <span style={{ color: greenTheme.dark }}>Confirmar Contraseña</span>
                                         </label>
                                         <div className="relative">
                                             <input
@@ -291,16 +362,18 @@ export default function Signup() {
                                                 name="confirmPassword"
                                                 value={formData.confirmPassword}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 pl-10 pr-10 rounded-lg border ${
-                                                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                                                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                                                className={`w-full px-4 py-3 pl-10 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                                                    errors.confirmPassword 
+                                                        ? 'border-red-500 focus:ring-red-500' 
+                                                        : `border-gray-300 focus:ring-[${greenTheme.primary}]`
+                                                }`}
                                                 placeholder="Confirma tu contraseña"
                                             />
                                             <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors"
                                             >
                                                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                                             </button>
@@ -316,30 +389,20 @@ export default function Signup() {
                                         )}
                                     </div>
 
-                                    {/* Términos y condiciones */}
-                                    <div className="flex items-center mb-6">
-                                        <input
-                                            type="checkbox"
-                                            id="terms"
-                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                            required
-                                        />
-                                        <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-                                            Acepto los <a href="#" className="text-blue-600 hover:underline">Términos</a> y <a href="#" className="text-blue-600 hover:underline">Privacidad</a>
-                                        </label>
-                                    </div>
-
                                     {/* Botón de registro */}
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all ${
+                                        className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all shadow-md ${
                                             isSubmitting 
-                                                ? 'bg-blue-400 cursor-not-allowed' 
-                                                : 'bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-md'
+                                                ? 'bg-gray-400 cursor-not-allowed' 
+                                                : 'hover:shadow-lg'
                                         }`}
+                                        style={{ 
+                                            background: isSubmitting ? '#9ca3af' : greenTheme.gradient
+                                        }}
                                     >
                                         {isSubmitting ? (
                                             <div className="flex items-center justify-center">
@@ -359,7 +422,11 @@ export default function Signup() {
                             <div className="text-center mt-6">
                                 <p className="text-sm text-gray-600">
                                     ¿Ya tienes una cuenta?{" "}
-                                    <NavLink to="/login" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                                    <NavLink 
+                                        to="/login" 
+                                        className="font-medium hover:underline"
+                                        style={{ color: greenTheme.primary }}
+                                    >
                                         Inicia sesión
                                     </NavLink>
                                 </p>

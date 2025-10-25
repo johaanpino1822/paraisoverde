@@ -1,9 +1,11 @@
+// components/Admin/Layout/AdminLayout.jsx
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import AdminNavbar from './Navbar';
 import AdminSidebar from './Sidebar';
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = () => {
   const [open, setOpen] = React.useState(true);
 
   const toggleDrawer = () => {
@@ -34,7 +36,7 @@ const AdminLayout = ({ children }) => {
           }),
         }}
       >
-        {children}
+        <Outlet /> {/* Cambiar children por Outlet */}
       </Box>
     </Box>
   );
